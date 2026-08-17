@@ -13,3 +13,10 @@ def analyze_traffic(vehicle_count):
         green_time = 90
 
     return traffic_level, green_time
+    def get_signal_status(traffic_level):
+    if traffic_level == "VERY HIGH":
+        return "GREEN - PRIORITY"
+    elif traffic_level == "HIGH":
+        return "GREEN"
+    else:
+        return "NORMAL"
