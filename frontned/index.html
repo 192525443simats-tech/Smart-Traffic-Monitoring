@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Traffic Monitoring</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Smart Traffic Monitoring</h1>
+        <p>Adaptive Signal Control Platform</p>
+
+        <label>Enter Vehicle Count</label>
+
+        <input type="number" id="vehicleCount" placeholder="Enter number of vehicles">
+
+        <button onclick="analyzeTraffic()">Analyze Traffic</button>
+
+        <div id="result">
+            <h2>Traffic Analysis</h2>
+
+            <p>Vehicle Count: <span id="count">-</span></p>
+            <p>Traffic Level: <span id="level">-</span></p>
+            <p>Green Signal Time: <span id="greenTime">-</span> seconds</p>
+            <p>Signal Status: <span id="signal">-</span></p>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
