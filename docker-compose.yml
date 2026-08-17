@@ -1,0 +1,9 @@
+services:
+  traffic-app:
+    build: .
+    container_name: smart-traffic-monitoring
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./database:/app/database
+    restart: unless-stopped
