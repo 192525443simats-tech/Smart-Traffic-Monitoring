@@ -16,9 +16,18 @@ def home():
 
 @app.route("/analyze", methods=["POST"])
 def analyze():
-    data = request.get_json()
+       data = request.get_json()
 
+if not data or "vehicle_count" not in data:
+    return jsonify({"error": "vehicle_count is required"}), 400
+
+try:
     vehicle_count = int(data["vehicle_count"])
+except (ValueError, TypeError):
+    return jsonify({"error": "vehicle_count must be a number"}), 400
+
+if vehicle_count < 0:
+    return jsonify({"error": "vehicle_count cannot be negative"}), 400
 
     traffic_level, green_time = analyze_traffic(vehicle_count)
 
