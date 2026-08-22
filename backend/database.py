@@ -1,9 +1,12 @@
+import os
 import sqlite3
 
-DATABASE = "database/traffic.db"
+DATABASE = "/app/database/traffic.db"
 
 
 def init_db():
+    os.makedirs("/app/database", exist_ok=True)
+
     connection = sqlite3.connect(DATABASE)
 
     cursor = connection.cursor()
@@ -35,3 +38,4 @@ def save_traffic_record(vehicle_count, traffic_level, green_time):
 
     connection.commit()
     connection.close()
+    
