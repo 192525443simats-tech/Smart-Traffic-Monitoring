@@ -2,7 +2,16 @@ name: Smart Traffic CI/CD
 
 on:
   push:
+    branches:
+      - main
+      - develop
+      - smart-traffic-cicd
+
   pull_request:
+    branches:
+      - main
+      - develop
+      - smart-traffic-cicd
 
 jobs:
 
@@ -41,4 +50,3 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t smart-traffic-monitoring .
-          # Smart Traffic CI/CD pipeline
