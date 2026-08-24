@@ -13,51 +13,49 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Building Docker images...'
-                bat 'docker compose build'
+                sh 'docker compose build'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running application tests...'
-                bat 'docker compose run --rm backend pytest'
+                echo 'Running automated tests...'
+                sh 'docker compose run --rm backend pytest'
             }
         }
 
         stage('Code Quality') {
             steps {
                 echo 'Checking Python source code...'
-
-                bat 'python -m py_compile backend\\app.py'
-                bat 'python -m py_compile backend\\database.py'
-                bat 'python -m py_compile backend\\traffic_analysis.py'
+                sh 'python3 -m py_compile backend/app.py'
+                sh 'python3 -m py_compile backend/database.py'
+                sh 'python3 -m py_compile backend/traffic_analysis.py'
             }
         }
 
         stage('Package') {
             steps {
                 echo 'Packaging application using Docker...'
-                bat 'docker compose build'
+                sh 'docker compose build'
             }
         }
 
         stage('Deploy') {
             steps {
                 echo 'Starting Smart Traffic Monitoring containers...'
-                bat 'docker compose up -d'
+                sh 'docker compose up -d'
             }
         }
 
         stage('Deployment Verification') {
             steps {
                 echo 'Checking running Docker containers...'
-                bat 'docker compose ps'
+                sh 'docker compose ps'
             }
         }
     }
 
     post {
-
         success {
             echo '=========================================='
             echo 'CI/CD Pipeline completed successfully!'
