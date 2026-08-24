@@ -38,4 +38,21 @@ def save_traffic_record(vehicle_count, traffic_level, green_time):
 
     connection.commit()
     connection.close()
-    
+
+
+def get_traffic_records():
+    connection = sqlite3.connect(DATABASE)
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT id, vehicle_count, traffic_level, green_time, timestamp
+        FROM traffic_records
+        ORDER BY id DESC
+    """)
+
+    records = cursor.fetchall()
+
+    connection.close()
+
+    return records
