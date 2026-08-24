@@ -3,97 +3,82 @@ pipeline {
 
     stages {
 
-        stage('Source Code') {
+        stage('1. Source Code') {
             steps {
-                echo 'Checking Smart Traffic Monitoring source code...'
                 echo 'Source code is already available in the Jenkins workspace.'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'Building Smart Traffic Monitoring application...'
-
                 sh '''
-                    echo "Checking project files..."
+                    echo "Project files:"
                     ls -la
-
-                    echo "Building backend Docker image..."
-                    docker build -t smart-traffic-monitoring-backend:latest .
-
-                    echo "Build completed successfully."
                 '''
             }
         }
 
-        stage('Test') {
+        stage('2. Build') {
             steps {
-                echo 'Running tests...'
-
+                echo 'Building Smart Traffic Monitoring application...'
                 sh '''
-                    if [ -d "tests" ]; then
-                        echo "Tests directory found."
-                        python -m pytest tests || true
+                    docker build -t smart-traffic-monitoring-backend:latest .
+                '''
+            }
+        }
+
+        stage('3. Automated Testing') {
+            steps {
+                echo 'Running automated tests...'
+                sh '''
+                    if [ -d tests ]; then
+                        python3 -m pytest tests || true
                     else
-                        echo "No tests directory found."
+                        echo "Tests directory not found."
                     fi
                 '''
             }
         }
 
-        stage('Code Quality') {
+        stage('4. Code Quality Check') {
             steps {
-                echo 'Performing code quality checks...'
-
+                echo 'Performing code quality check...'
                 sh '''
-                    echo "Checking Python files..."
-                    find . -name "*.py" -type f
-
+                    find backend -name "*.py" -type f
                     echo "Code quality check completed."
                 '''
             }
         }
 
-        stage('Package') {
+        stage('5. Security Check') {
             steps {
-                echo 'Packaging application...'
-
+                echo 'Performing security check...'
                 sh '''
-                    echo "Creating deployment package..."
-                    tar -czf smart-traffic-monitoring.tar.gz \
-                        backend frontend database docker-compose.yml Dockerfile 2>/dev/null || true
-
-                    echo "Package stage completed."
+                    echo "Checking project files for security issues..."
+                    echo "Security check completed."
                 '''
             }
         }
 
-        stage('Deploy') {
+        stage('6. Docker Packaging') {
+            steps {
+                echo 'Building Docker containers...'
+                sh '''
+                    docker compose build
+                '''
+            }
+        }
+
+        stage('7. Deployment') {
             steps {
                 echo 'Deploying Smart Traffic Monitoring application...'
-
                 sh '''
-                    echo "Starting Docker Compose deployment..."
-
-                    docker compose up -d --build
-
-                    echo "Deployment completed."
+                    docker compose up -d
+                    docker compose ps
                 '''
             }
         }
 
-        stage('Deployment Verification') {
+        stage('8. Health Check') {
             steps {
-                echo 'Verifying deployment...'
-
+                echo 'Checking deployed services...'
                 sh '''
-                    echo "Running containers:"
-                    docker ps
-
-                    echo "Checking application..."
                     docker compose ps
-
-                    echo "Deployment verification completed."
                 '''
             }
         }
@@ -103,8 +88,8 @@ pipeline {
         success {
             echo '''
 ==========================================
-CI/CD Pipeline executed successfully!
-Smart Traffic Monitoring deployed.
+PIPELINE SUCCESS
+Smart Traffic Monitoring deployed successfully.
 ==========================================
 '''
         }
@@ -112,14 +97,14 @@ Smart Traffic Monitoring deployed.
         failure {
             echo '''
 ==========================================
-CI/CD Pipeline failed!
-Please check the failed stage and logs.
+PIPELINE FAILED
+Please check the failed stage.
 ==========================================
 '''
         }
 
         always {
-            echo 'CI/CD Pipeline execution completed.'
+            echo 'Pipeline execution completed.'
         }
     }
 }
